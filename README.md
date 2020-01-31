@@ -13,6 +13,9 @@ There are 2 main data sources:
 * States, cities by daily rates
 
 
-####Update Time: Everyday 9, 12, 16, 22 UTC time
+### Update Time: Everyday 9, 12, 16, 22 UTC time
+
+Changelog:
+1.0.0 - 2020-01-31 - "translated overall.csv to english based on Google Translate API"
 
 
