@@ -31,10 +31,15 @@ def convertTime(x):
         output.append(a)
     return output
 
-def downloadData(url):
+def downloadDataToDF(url):
     r=requests.request('GET', url)
     data=r.json()
     return pd.DataFrame.from_records(data['results'])
+
+def downloadData(url):
+    r=requests.request('GET', url)
+    data=r.json()
+    return data['results']
 
 def dataMapping(data):
 # comment out due to GoogleTranslate API call limits - if run this too many times, then google will temp block your IP
@@ -52,10 +57,87 @@ def dataMapping(data):
     data['virus_eng']="2019-nCoV"
     data['dataDate']=convertTime(data['updateTime'])
 
+def areaMapping(data):
+    country=[]
+    provice=[]
+    totalConfirmed=[]
+    totalSus=[]
+    totalDead=[]
+    totalCure=[]
+    confirmed=[]
+    updateTime=[]
+    sus=[]
+    cure=[]
+    dead=[]
+    city=[]
+
+
+    for i in range(0, len(data)):
+        b=data[i]
+        country_info = b['country']
+    #     provinceShortName_info = b['provinceShortName']
+        province_info = b['provinceName']
+        confirmedCount_info = b['confirmedCount']
+        suspectedCount_info = b['suspectedCount']
+        curedCount_info = b['curedCount']
+        deadCount_info = b['deadCount']
+        updateTime_info=b['updateTime']
+        if b['cities'] != None:        
+            j_range=len(b['cities'])
+            for j in b['cities']:
+                country.append(country_info)
+                provice.append(province_info)
+                totalConfirmed.append(confirmedCount_info)
+                totalSus.append(suspectedCount_info)
+                totalDead.append(deadCount_info)
+                totalCure.append(curedCount_info)
+                city.append(j['cityName'])
+                confirmed.append(j['confirmedCount'])
+                sus.append(j['suspectedCount'])
+                cure.append(j['curedCount'])
+                dead.append(j['deadCount'])
+                updateTime.append(updateTime_info)
+        else:
+            country.append(country_info)
+            provice.append(province_info)
+            totalConfirmed.append(confirmedCount_info)
+            totalSus.append(suspectedCount_info)
+            totalDead.append(deadCount_info)
+            totalCure.append(curedCount_info)
+            city.append(province_info)
+            confirmed.append(confirmedCount_info)
+            sus.append(suspectedCount_info)
+            cure.append(curedCount_info)
+            dead.append(deadCount_info)
+            updateTime.append(updateTime_info)
+    
+    output={'Country':country,
+            'Province':provice,
+            'TotalConfirmedCount':totalConfirmed,
+            'TotalSuspectedCount':totalSus,
+            'TotalDeadCount':totalDead,
+            'TotalCuredCount':totalCure,
+            'City':city,
+            'CityCount':confirmed,
+            'CitySuspectedCount':sus,
+            'CityCuredCount':cure,
+            'CityDeadCount':dead,
+            'DataUpdateTime':updateTime}
+    return output
+    
+
 if __name__ == '__main__':
-#     overall = downloadData(OVERALL_URL)
-#     dataMapping(overall)
-#     overall.to_csv('~/coronavirus_data/dataSource/overall.csv', index=False, encoding='utf_8_sig')
+    overall = downloadDataToDF(OVERALL_URL)
+    dataMapping(overall)
+    overall.to_csv('~/coronavirus_data/dataSource/overall.csv', index=False, encoding='utf_8_sig')
+    
     area = downloadData(AREA_URL)
-    area.to_csv('~/coronavirus_data/dataSource/overall.csv', index=False, encoding='utf_8_sig')
+    area_output=areaMapping(area)
+    area_output =pd.DataFrame(area_output)
+    area_output['DataUpdateTime']=convertTime(area_output['DataUpdateTime'])
+    area_output.to_csv('~/coronavirus_data/dataSource/area_breakDown.csv', index=False, encoding='utf_8_sig')
+    
     print("files downloaded successfully")
+    
+
+
