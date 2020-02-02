@@ -2,6 +2,11 @@
 
 *All data from this repo is based on [DXY-2019-nCoV-Crawler API](https://github.com/BlankerL/DXY-2019-nCoV-Crawler). If you want to see the original raw data please use this repo.*
 
+if the API server is down then this repo won't be updated until the server is back. Please use below API status to check the server status:
+
+[![API Status](https://img.shields.io/website?url=https%3A%2F%2Flab.isaaclin.cn)](https://lab.isaaclin.cn/nCoV/)
+
+
 _______________
 
 This repo is for displaying the current coronavirus latest status (confirmed cases, suspected cases, recovered cases and death cases).
