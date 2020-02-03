@@ -10,6 +10,7 @@ from googletrans import Translator
 import requests
 import pandas as pd
 import datetime
+import time
 
 OVERALL_URL ="https://lab.isaaclin.cn/nCoV/api/overall?latest=0"
 AREA_URL = 'https://lab.isaaclin.cn/nCoV/api/area?latest=1'
@@ -127,17 +128,29 @@ def areaMapping(data):
     
 
 if __name__ == '__main__':
+    start_time = time.time()
+
     overall = downloadDataToDF(OVERALL_URL)
     dataMapping(overall)
     overall.to_csv('~/coronavirus_data/dataSource/overall.csv', index=False, encoding='utf_8_sig')
+    print("overall file downloaded successfully")
+
+    end_time_1 = time.time()
+    part_1_time = end_time_1-start_time
+    print ("overall running time: ", part_1_time)
     
     area = downloadData(AREA_URL)
     area_output=areaMapping(area)
     area_output =pd.DataFrame(area_output)
     area_output['DataUpdateTime']=convertTime(area_output['DataUpdateTime'])
+    
+    area_output['Country']=tranlateToEng(area_output['Country'])
     area_output.to_csv('~/coronavirus_data/dataSource/area_breakDown.csv', index=False, encoding='utf_8_sig')
     
-    print("files downloaded successfully")
+    end_time = time.time()
+    process_time = end_time - start_time
+    print("area file downloaded successfully")
+    print("total running time: ", process_time)
     
 
 
