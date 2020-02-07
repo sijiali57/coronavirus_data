@@ -143,7 +143,7 @@ if __name__ == '__main__':
     area_output=areaMapping(area)
     area_output =pd.DataFrame(area_output)
     area_output['DataUpdateTime']=convertTime(area_output['DataUpdateTime'])
-    
+    area_output['City']=tranlateToEng(area_output['City'])
     area_output['Country']=tranlateToEng(area_output['Country'])
     area_output.to_csv('~/coronavirus_data/dataSource/area_breakDown.csv', index=False, encoding='utf_8_sig')
     
